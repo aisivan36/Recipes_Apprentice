@@ -14,7 +14,7 @@ class RecipeDetail extends StatefulWidget {
 }
 
 class _RecipeDetailState extends State<RecipeDetail> {
-  // TODO: Add _sliderVal here
+  int _sliderVal = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -66,13 +66,33 @@ class _RecipeDetailState extends State<RecipeDetail> {
                 itemCount: widget.recipe.ingredients.length,
                 itemBuilder: (context, int index) {
                   final ingredient = widget.recipe.ingredients[index];
-                  //TODO: add ingredient.quantity
+
+                  /// add [_sliderVal] to [ingredient.quantity!] and multiply it
+                  /// to update the value
                   return Text(
-                      '${ingredient.quantity} ${ingredient.measure} ${ingredient.name} ');
+                      '${ingredient.quantity! * _sliderVal} ${ingredient.measure} ${ingredient.name} ');
                 }),
           ),
 
-          // TODO: Add slider() here
+          Slider(
+            min: 1,
+            max: 10,
+            divisions: 10,
+            // Label updates as the _sliderVal changes and displays a scaled number of servings
+            label: '${_sliderVal * widget.recipe.servings} servings',
+            value: _sliderVal.toDouble(),
+
+            onChanged: (newValue) {
+              // the slider only works in double, so we convert it to int with round()
+              setState(() {
+                _sliderVal = newValue.round();
+              });
+            },
+            // an active color is the section between minimum value on the left
+            activeColor: Colors.green,
+            // an inactive color is the section between the maximum value on the right
+            inactiveColor: Colors.black,
+          )
         ],
       )),
     );
